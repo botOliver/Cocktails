@@ -1,24 +1,27 @@
 <script setup>
+import {Back} from '@element-plus/icons-vue'
+
 const props = defineProps({
-    imgUrl:{
-        typeof: String,
-        required: true
-    }
+	imgUrl: {
+		typeof: String,
+		required: true,
+	},
 })
 </script>
 
-
 <template>
-    <div class="root">
-        <div :style="`background-image: url(${imgUrl})`" class="img"></div> 
+	<div class="root">
+		<div :style="`background-image: url(${imgUrl})`" class="img"></div>
 
-        <div class="main">
-            <el-button class="btn">Get random cocktail</el-button>
-            <slot></slot>
-        </div>
-    </div>
+		<div class="main">
+			<div class="btns">
+				<el-button type="primary" :icon="Back" circle class="back"/>
+				<el-button class="btn">Get random cocktail</el-button>
+			</div>
+			<slot></slot>
+		</div>
+	</div>
 </template>
-
 
 <style lang="sass" scoped>
 @import '../assets/styles/main'
@@ -54,4 +57,15 @@ const props = defineProps({
         background-color: darken($accent, 10%)
         border-color: darken($accent, 10%)
 
+.btns
+    display: flex
+    justify-content: space-between
+    align-items: center
+
+.back
+    background-color: transparent
+    border-color: #fff
+
+    &:hover
+        border-color: $accent
 </style>

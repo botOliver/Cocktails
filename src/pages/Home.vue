@@ -1,22 +1,21 @@
 <script setup>
+import { ref } from 'vue'
 import AppLayout from '@/components/AppLayout.vue'
 import CocktailThumb from '@/components/CocktailThumb.vue'
 import { useRootStore } from '@/stores/root'
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
 const rootStore = useRootStore()
 rootStore.getIngredients()
 
-const { ingredients, cocktails } = storeToRefs(rootStore)
-const ingredient = ref(null)
+const { ingredients, ingredient, cocktails } = storeToRefs(rootStore)
 
-function getCocktails(){
-	rootStore.getCocktails(ingredient.value)
+function getCocktails() {
+	rootStore.getCocktails(rootStore.ingredient)
 }
 </script>
 
 <template>
-	<AppLayout imgUrl="/src/assets/img/bg-1.jpg">
+	<AppLayout imgUrl="/src/assets/img/bg-1.jpg" >
 		<div class="wrapper">
 			<div v-if="!ingredient || !cocktails" class="info">
 				<div class="title">Choose your drink</div>
@@ -24,7 +23,9 @@ function getCocktails(){
 				<div class="select-wrapper">
 					<el-select
 						class="select"
-						v-model="ingredient"
+						filterable
+						allow-create
+						v-model="rootStore.ingredient"
 						placeholder="Choose main ingredient"
 						style="width: 240px"
 						@change="getCocktails"
@@ -38,15 +39,20 @@ function getCocktails(){
 					</el-select>
 				</div>
 				<div class="text">
-					Try our delicious cocktail recipes for every occasion. Find delicious cocktail recipes by ingredient through our cocktail generator.
-					</div>
-				<img src="/src/assets/img/cocktails.png" alt="Cocktails" class="img">
+					Try our delicious cocktail recipes for every occasion. Find delicious
+					cocktail recipes by ingredient through our cocktail generator.
+				</div>
+				<img src="/src/assets/img/cocktails.png" alt="Cocktails" class="img" />
 			</div>
 			<div v-else class="info">
-				<div class="title">COCKTAILS WITH {{ ingredient }} </div>
+				<div class="title">COCKTAILS WITH {{ ingredient }}</div>
 				<div class="line"></div>
 				<div class="cocktails">
-					<CocktailThumb v-for="cocktail in cocktails" :key="cocktail.idDrink" :cocktail="cocktail"/>
+					<CocktailThumb
+						v-for="cocktail in cocktails"
+						:key="cocktail.idDrink"
+						:cocktail="cocktail"
+					/>
 				</div>
 			</div>
 		</div>
@@ -86,10 +92,9 @@ function getCocktails(){
 
 .cocktails
 	display: flex
-	justify-content: space-between
 	align-items: center
 	margin-top: 60px
 	flex-wrap: wrap
-	overflow-y: auto  
+	overflow-y: auto
 	max-height: 400px
 </style>
